@@ -23,7 +23,7 @@ type Result struct {
 func main() {
 
 	app := &cli.App{
-		Name:  "bench",
+		Name:  "nixbench",
 		Usage: "A modern server benchmark program",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
