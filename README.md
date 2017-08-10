@@ -2,6 +2,10 @@
 
 A better benchmarking tool for servers.
 
+Download the latest release for your platform from the [releases page](https://github.com/jgillich/nixbench/releases).
+Then simply run the included nixbench program for the standard interactive output, or add `--help` for further options.
+
+
 Sample output:
 
 ```

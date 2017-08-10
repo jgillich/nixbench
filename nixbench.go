@@ -24,7 +24,7 @@ func main() {
 
 	app := &cli.App{
 		Name:  "nixbench",
-		Usage: "A modern server benchmark program",
+		Usage: "A better benchmarking tool for servers",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
 				Name:  "yaml",
