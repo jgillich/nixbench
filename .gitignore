@@ -1,0 +1,5 @@
+vendor
+nixbench
+debug
+build.pulse
+diskbench_*
