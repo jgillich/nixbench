@@ -45,8 +45,12 @@ type NetStat []NetStatValue
 func Net() (*NetStat, error) {
 	net := NetStat{}
 
+	var client = &http.Client{
+		Timeout: time.Second * 10,
+	}
+
 	for _, file := range files {
-		res, err := http.Get(file.URL)
+		res, err := client.Get(file.URL)
 		if err != nil {
 			return nil, err
 		}
