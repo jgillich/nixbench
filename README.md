@@ -5,7 +5,7 @@ A better benchmarking tool for servers.
 To invoke, run:
 
 ```sh
-curl https://raw.githubusercontent.com/jgillich/nixbench/master/nixbench.sh | sh
+curl -sS https://raw.githubusercontent.com/jgillich/nixbench/master/nixbench.sh | sh
 ```
 
 Alternatively, you can download the latest release for your platform from the

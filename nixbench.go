@@ -14,6 +14,7 @@ import (
 )
 
 type Result struct {
+	CPU       *CPUStat
 	Disk      *DiskStat
 	Geekbench *GeekbenchStat
 	Host      *HostStat
@@ -58,6 +59,17 @@ func runInteractive() {
 	fmt.Printf("%-10s: %s\n", "CPU", host.CPU)
 	fmt.Printf("%-10s: %d\n", "Cores", host.Cores)
 	fmt.Printf("%-10s: %d Mhz\n", "Clock", int(host.Clock))
+	fmt.Printf("%-10s: %d MB\n", "RAM", host.RAM)
+
+	fmt.Print("\n\n")
+	fmt.Print("CPU\n")
+	fmt.Print("---\n\n")
+	spin.Start()
+	cpu, err := CPU()
+	spin.Stop()
+	handleErr(err)
+	fmt.Printf("Sha256  : %.2f seconds\n", cpu.Sha256)
+	fmt.Printf("Gzip    : %.2f seconds\n", cpu.Gzip)
 
 	fmt.Print("\n\n")
 	fmt.Print("Disk\n")
@@ -99,6 +111,9 @@ func runYaml() {
 	host, err := Host()
 	handleErr(err)
 
+	cpu, err := CPU()
+	handleErr(err)
+
 	disk, err := Disk()
 	handleErr(err)
 
@@ -110,6 +125,7 @@ func runYaml() {
 
 	res := Result{
 		Host:      host,
+		CPU:       cpu,
 		Disk:      disk,
 		Geekbench: gb,
 		Net:       net,

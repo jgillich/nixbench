@@ -18,7 +18,8 @@ type DiskStat struct {
 func Disk() (*DiskStat, error) {
 	stat := DiskStat{}
 
-	null, err := os.Open("/dev/zero")
+	zero, err := os.Open("/dev/zero")
+	defer zero.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +36,7 @@ func Disk() (*DiskStat, error) {
 
 		start := time.Now()
 
-		if _, err := io.CopyN(f, null, bytefmt.GIGABYTE); err != nil {
+		if _, err := io.CopyN(f, zero, bytefmt.GIGABYTE); err != nil {
 			return nil, err
 		}
 		f.Sync()
