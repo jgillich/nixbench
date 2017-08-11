@@ -45,9 +45,15 @@
 
 [[projects]]
   name = "github.com/shirou/gopsutil"
-  packages = ["cpu","host","internal/common","process"]
+  packages = ["cpu","host","internal/common","mem","net","process"]
   revision = "aa0a3bce9d1f4efc710ed812f19f77851da2eedd"
   version = "v2.17.06"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/shirou/w32"
+  packages = ["."]
+  revision = "bb4de0191aa41b5507caa14b0650cdbddcd9280b"
 
 [[projects]]
   name = "github.com/urfave/cli"
@@ -70,6 +76,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "3b1517fdc8a4c7769dc2f1ea5e83d33c75efd0e6938d54f41bd46be755911c9b"
+  inputs-digest = "91b6a4439cffc72c1a6067706d065220030572ec34abc778428c3ace18f08242"
   solver-name = "gps-cdcl"
   solver-version = 1

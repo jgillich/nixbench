@@ -34,16 +34,11 @@ var files = []file{
 	{Key: "Washington, USA", URL: "http://speedtest.tok02.softlayer.com/downloads/test100.zip"},
 }
 
-type NetStatValue struct {
-	Location string
-	Mbit     float64
-}
-
-// NetStat contains the speed test results in mbit
-type NetStat []NetStatValue
+// NetStat contains the speed test results in MB per second
+type NetStat map[string]float64
 
 func Net() (*NetStat, error) {
-	net := NetStat{}
+	stat := NetStat{}
 
 	var client = &http.Client{
 		Timeout: time.Second * 10,
@@ -66,8 +61,8 @@ func Net() (*NetStat, error) {
 		}
 		duration := time.Since(start)
 
-		net = append(net, NetStatValue{Location: file.Key, Mbit: float64(res.ContentLength/bytefmt.MEGABYTE) / duration.Seconds() * 8})
+		stat[file.Key] = float64(res.ContentLength/bytefmt.MEGABYTE) / duration.Seconds()
 	}
 
-	return &net, nil
+	return &stat, nil
 }

@@ -45,7 +45,7 @@ func main() {
 }
 
 func runInteractive() {
-	fmt.Print("nixbench 0.1 - github.com/jgillich/nixbench")
+	fmt.Print("nixbench 0.1 - https://github.com/jgillich/nixbench")
 	spin := spinner.New(spinner.CharSets[12], time.Second/10)
 
 	fmt.Print("\n\n")
@@ -55,7 +55,6 @@ func runInteractive() {
 	handleErr(err)
 	fmt.Printf("%-10s: %s\n", "OS", host.OS)
 	fmt.Printf("%-10s: %s\n", "Platform", host.Platform)
-	fmt.Printf("%-10s: %s\n", "Virt", host.Virt)
 	fmt.Printf("%-10s: %s\n", "CPU", host.CPU)
 	fmt.Printf("%-10s: %d\n", "Cores", host.Cores)
 	fmt.Printf("%-10s: %d Mhz\n", "Clock", int(host.Clock))
@@ -90,8 +89,8 @@ func runInteractive() {
 	net, err := Net()
 	spin.Stop()
 	handleErr(err)
-	for _, value := range *net {
-		fmt.Printf("%-30s: %d Mbit/s\n", value.Location, int(value.Mbit))
+	for _, f := range files {
+		fmt.Printf("%-30s: %d MB/s\n", f.Key, int((*net)[f.Key]))
 	}
 
 }

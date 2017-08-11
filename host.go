@@ -10,7 +10,6 @@ import (
 type HostStat struct {
 	OS       string
 	Platform string
-	Virt     string
 	CPU      string
 	Cores    int
 	Clock    float64
@@ -27,7 +26,6 @@ func Host() (*HostStat, error) {
 
 	stat.OS = host.OS
 	stat.Platform = fmt.Sprintf("%s %s", host.Platform, host.PlatformVersion)
-	stat.Virt = host.VirtualizationSystem
 
 	cpu, err := cpu.Info()
 	if err != nil {
