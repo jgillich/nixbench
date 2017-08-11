@@ -2,9 +2,12 @@
 
 A better benchmarking tool for servers.
 
-Download the latest release for your platform from the [releases page](https://github.com/jgillich/nixbench/releases).
-Then simply run the included nixbench program for the standard interactive output, or add `--help` for further options.
+To invoke, run:
 
+  curl https://raw.githubusercontent.com/jgillich/nixbench/master/nixbench.sh | sh
+
+Alternatively, you can download the latest release for your platform from the
+[releases page](https://github.com/jgillich/nixbench/releases).
 
 Sample output:
 
