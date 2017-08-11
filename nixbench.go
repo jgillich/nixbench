@@ -21,6 +21,8 @@ type Result struct {
 	Net       *NetStat
 }
 
+var geekbench bool
+
 func main() {
 
 	app := &cli.App{
@@ -31,8 +33,13 @@ func main() {
 				Name:  "yaml",
 				Usage: "Output as yaml",
 			},
+			&cli.BoolFlag{
+				Name:  "no-geekbench",
+				Usage: "Doesn't run Geekbench",
+			},
 		},
 		Action: func(c *cli.Context) error {
+			geekbench = !c.GlobalBool("no-geekbench")
 			if c.GlobalBool("yaml") {
 				runYaml()
 			} else {
@@ -83,16 +90,18 @@ func runInteractive() {
 	}
 	fmt.Printf("Average  : %d MB/s\n", int(disk.Average))
 
-	fmt.Print("\n\n")
-	fmt.Print("Geekbench\n")
-	fmt.Print("---------\n\n")
-	spin.Start()
-	gb, err := Geekbench()
-	spin.Stop()
-	handleErr(err)
-	fmt.Printf("Single-Core Score  : %d\n", gb.SingleCore)
-	fmt.Printf("Multi-Core Score   : %d\n", gb.MultiCore)
-	fmt.Printf("Result URL         : %s\n", gb.URL)
+	if geekbench {
+		fmt.Print("\n\n")
+		fmt.Print("Geekbench\n")
+		fmt.Print("---------\n\n")
+		spin.Start()
+		gb, err := Geekbench()
+		spin.Stop()
+		handleErr(err)
+		fmt.Printf("Single-Core Score  : %d\n", gb.SingleCore)
+		fmt.Printf("Multi-Core Score   : %d\n", gb.MultiCore)
+		fmt.Printf("Result URL         : %s\n", gb.URL)
+	}
 
 	fmt.Print("\n\n")
 	fmt.Print("Net\n")
