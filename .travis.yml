@@ -34,7 +34,7 @@ install:
   - export GOARCH="${ARCH}"
 script:
   - go build -o nixbench-${OS}-${ARCH}
-  - if [ ${OS} = "linux" ] && [ ${ARCH} = "amd64" ]; then ./nixbench-linux-amd64 --yaml; fi
+  - if [ ${OS} = "linux" ] && [ ${ARCH} = "amd64" ]; then ./nixbench-linux-amd64; fi
 deploy:
   provider: releases
   api_key:
