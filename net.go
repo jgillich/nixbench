@@ -31,7 +31,7 @@ var files = []file{
 	{Key: "Singapore, Singapore", URL: "http://speedtest.sng01.softlayer.com/downloads/test100.zip"},
 	{Key: "Tokyo, Japan", URL: "http://speedtest.tok02.softlayer.com/downloads/test100.zip"},
 	{Key: "Toronto, Canada", URL: "http://speedtest.tor01.softlayer.com/downloads/test100.zip"},
-	{Key: "Washington, USA", URL: "http://speedtest.wdc01.softlayer.com/downloads/test10.zip"},
+	{Key: "Washington, USA", URL: "http://speedtest.wdc01.softlayer.com/downloads/test100.zip"},
 }
 
 // NetStat contains the speed test results in MB per second
