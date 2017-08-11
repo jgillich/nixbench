@@ -12,7 +12,7 @@ case "$(uname -s)" in
     OpenBSD)    os=openbsd;;
 esac
 
-if [[ -z "$os" ]]; then
+if [ -z "$os" ]; then
   echo "Unsupported operating system: $(uname -s)"
   exit 1
 fi
@@ -26,7 +26,7 @@ case "$(uname -m)" in
     armv7l)     arch=arm;;
 esac
 
-if [[ -z "$arch" ]]; then
+if [ -z "$arch" ]; then
   echo "Unsupported architecture: $(uname -m)"
   exit 1
 fi
