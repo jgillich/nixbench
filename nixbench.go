@@ -46,7 +46,7 @@ func main() {
 }
 
 func runInteractive() {
-	fmt.Print("nixbench 0.4.1 - https://github.com/jgillich/nixbench")
+	fmt.Print("nixbench 0.4.2 - https://github.com/jgillich/nixbench")
 	spin := spinner.New(spinner.CharSets[12], time.Second/10)
 
 	fmt.Print("\n\n")
