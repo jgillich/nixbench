@@ -20,7 +20,7 @@ env:
   - MY_GOOS=windows MY_GOARCH=amd64
 before_install:
   # workaround for travis-ci/gimme#42
-  - export GOARCH="${MY_GOARCH}"
+  - export GOOS="${MY_GOOS}"
   - export GOARCH="${MY_GOARCH}"
 install:
   - go get -u github.com/golang/dep/cmd/dep
