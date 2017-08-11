@@ -18,13 +18,12 @@ env:
   - MY_GOOS=solaris MY_GOARCH=amd64
   - MY_GOOS=windows MY_GOARCH=386
   - MY_GOOS=windows MY_GOARCH=amd64
-before_install:
-  # workaround for travis-ci/gimme#42
-  - export GOOS="${MY_GOOS}"
-  - export GOARCH="${MY_GOARCH}"
 install:
   - go get -u github.com/golang/dep/cmd/dep
   - dep ensure
+  # workaround for travis-ci/gimme#42
+  - export GOOS="${MY_GOOS}"
+  - export GOARCH="${MY_GOARCH}"
 script:
   - go build -o nixbench-${MY_GOOS}-${MY_GOARCH}
   - ls -la
