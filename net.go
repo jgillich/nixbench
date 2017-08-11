@@ -41,7 +41,7 @@ func Net() (*NetStat, error) {
 	stat := NetStat{}
 
 	var client = &http.Client{
-		Timeout: time.Second * 10,
+		Timeout: time.Minute * 2,
 	}
 
 	for _, file := range files {
