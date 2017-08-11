@@ -1,34 +1,44 @@
 language: go
 env:
-- GOOS=darwin GOARCH=amd64
-- GOOS=dragonfly GOARCH=amd64
-- GOOS=freebsd GOARCH=386
-- GOOS=freebsd GOARCH=amd64
-- GOOS=freebsd GOARCH=arm
-- GOOS=linux GOARCH=386
-- GOOS=linux GOARCH=amd64
-- GOOS=linux GOARCH=arm
-- GOOS=linux GOARCH=arm64
-- GOOS=netbsd GOARCH=386
-- GOOS=netbsd GOARCH=amd64
-- GOOS=netbsd GOARCH=arm
-- GOOS=openbsd GOARCH=386
-- GOOS=openbsd GOARCH=amd64
-- GOOS=openbsd GOARCH=arm
-- GOOS=solaris GOARCH=amd64
-- GOOS=windows GOARCH=386
-- GOOS=windows GOARCH=amd64
+  - MY_GOOS=darwin MY_GOARCH=amd64
+  - MY_GOOS=dragonfly MY_GOARCH=amd64
+  - MY_GOOS=freebsd MY_GOARCH=386
+  - MY_GOOS=freebsd MY_GOARCH=amd64
+  - MY_GOOS=freebsd MY_GOARCH=arm
+  - MY_GOOS=linux MY_GOARCH=386
+  - MY_GOOS=linux MY_GOARCH=amd64
+  - MY_GOOS=linux MY_GOARCH=arm
+  - MY_GOOS=linux MY_GOARCH=arm64
+  - MY_GOOS=netbsd MY_GOARCH=386
+  - MY_GOOS=netbsd MY_GOARCH=amd64
+  - MY_GOOS=netbsd MY_GOARCH=arm
+  - MY_GOOS=openbsd MY_GOARCH=386
+  - MY_GOOS=openbsd MY_GOARCH=amd64
+  - MY_GOOS=openbsd MY_GOARCH=arm
+  - MY_GOOS=solaris MY_GOARCH=amd64
+  - MY_GOOS=windows MY_GOARCH=386
+  - MY_GOOS=windows MY_GOARCH=amd64
+before_install:
+  # workaround for travis-ci/gimme#42
+  - curl -o go.tar.gz -sL https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz
+  - tar -C $HOME -xf go.tar.gz
+  - rm go.tar.gz
+  - export GOROOT="${HOME}/go"
+  - export PATH="${GOROOT}/bin:${PATH}"
+  - export GOOS="${MY_GOOS}"
+  - export GOARCH="${MY_GOARCH}"
+  - export GOARCH="${MY_GOARCH}"
 install:
-- go get -u github.com/golang/dep/cmd/dep
-- dep ensure
+  - go get -u github.com/golang/dep/cmd/dep
+  - dep ensure
 script:
-- go build -o nixbench-${GOOS}-${GOARCH}
-- ls -la
+  - go build -o nixbench-$MY_GOOS-$MY_GOARCH
+  - ls -la
 deploy:
   provider: releases
   api_key:
     secure: cSvDAS3E+H3kNbv2hA4ZYnUK4VtAmMN2wCurEmadFEKwXuF3DueyMFfbvONhj82Ykz3/ZK6XGWEXDGDSVePMpfqQJMgsCLu3Llm89WwDl2A5rleeldNLOgTtx6iUteetHrGoj0Hs418QANZ7/AqjoqCvL6xMN/rjoKUTQjF0VMBKIUBPGbZJOhnQZtSvSoQvzcEsmQf/8AqwOHCVzt7kBsuZUsWhxP0NM81Ucz2et8isJ7ufJVzgd836V2qevC5mZLlbf+ZJ1j1loF+HIr1CYQkAELFWGjPfTF0644Jo5x+/9YpBxyzuu9g6YYvW/lnaO/rkTn1thj5ti+fs0cOUW4rwZMQ2nUTDVpfeWraptJ2q6w1i+mPH2at1g9XIu9fka+3eO/o2LSuka70b5gwBOPCyln5lbwuwKEDQF3zvjb7tfuGvzsSVCWYwDstIYcYq/nqTGCD1tXApIDE5pp9zWVYS9+6xJuEd9+TixXSSokSd5Bl8sPhdtJcEdOToePQvySmtEHR7IDjhSoRTCshTJe35r2E2iurUmOEFNXDJQjBXgzgLZquqCS48wWS6xVdc50MFB5VFyznjRwOAj8J3MEWAdB4d/JNGbCsuZnH6G6xxteEyPsjMC6bvHWI3cxG+4i8c3o3wJG59pPQv59nmo917jdInXBOUVrUEbrJAlWs=
-  file: nixbench-${GOOS}-${GOARCH}
+  file: nixbench-$MY_GOOS-$MY_GOARCH
   skip_cleanup: true
   on:
     tags: true
