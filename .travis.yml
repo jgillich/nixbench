@@ -22,12 +22,13 @@ install:
 - go get -u github.com/golang/dep/cmd/dep
 - dep ensure
 script:
-- go build -o nixbench-$GOOS-$GOARCH
+- go build -o nixbench-${GOOS}-${GOARCH}
+- ls -la
 deploy:
   provider: releases
   api_key:
     secure: cSvDAS3E+H3kNbv2hA4ZYnUK4VtAmMN2wCurEmadFEKwXuF3DueyMFfbvONhj82Ykz3/ZK6XGWEXDGDSVePMpfqQJMgsCLu3Llm89WwDl2A5rleeldNLOgTtx6iUteetHrGoj0Hs418QANZ7/AqjoqCvL6xMN/rjoKUTQjF0VMBKIUBPGbZJOhnQZtSvSoQvzcEsmQf/8AqwOHCVzt7kBsuZUsWhxP0NM81Ucz2et8isJ7ufJVzgd836V2qevC5mZLlbf+ZJ1j1loF+HIr1CYQkAELFWGjPfTF0644Jo5x+/9YpBxyzuu9g6YYvW/lnaO/rkTn1thj5ti+fs0cOUW4rwZMQ2nUTDVpfeWraptJ2q6w1i+mPH2at1g9XIu9fka+3eO/o2LSuka70b5gwBOPCyln5lbwuwKEDQF3zvjb7tfuGvzsSVCWYwDstIYcYq/nqTGCD1tXApIDE5pp9zWVYS9+6xJuEd9+TixXSSokSd5Bl8sPhdtJcEdOToePQvySmtEHR7IDjhSoRTCshTJe35r2E2iurUmOEFNXDJQjBXgzgLZquqCS48wWS6xVdc50MFB5VFyznjRwOAj8J3MEWAdB4d/JNGbCsuZnH6G6xxteEyPsjMC6bvHWI3cxG+4i8c3o3wJG59pPQv59nmo917jdInXBOUVrUEbrJAlWs=
-  file: nixbench-$GOOS-$GOARCH
+  file: nixbench-${GOOS}-${GOARCH}
   skip_cleanup: true
   on:
     tags: true
