@@ -1,8 +1,4 @@
 language: go
-sudo: true
-dist: trusty
-services:
-- docker
 env:
 - GOOS=darwin GOARCH=amd64
 - GOOS=dragonfly GOARCH=amd64
