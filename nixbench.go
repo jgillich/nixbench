@@ -9,7 +9,8 @@ import (
 	"github.com/urfave/cli"
 )
 
-var VERSION = "0.4.3"
+// VERSION is set at build time
+var VERSION = "master"
 
 type Result struct {
 	CPU       *CPUStat
@@ -54,7 +55,7 @@ func (n *Nixbench) Printf(format string, a ...interface{}) {
 }
 
 func (n *Nixbench) Run() error {
-	n.Printf("nixbench - https://github.com/jgillich/nixbench")
+	n.Printf("nixbench %s - https://github.com/jgillich/nixbench", VERSION)
 
 	n.Printf("\n\n")
 	n.Printf("Host\n")
