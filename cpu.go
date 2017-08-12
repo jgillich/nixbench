@@ -10,7 +10,6 @@ import (
 	"code.cloudfoundry.org/bytefmt"
 )
 
-// DiskStat stores disk speeds in MB/s
 type CPUStat struct {
 	Sha256 float64
 	Gzip   float64

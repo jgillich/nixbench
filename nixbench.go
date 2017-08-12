@@ -2,16 +2,14 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
-	"time"
 
 	yaml "gopkg.in/yaml.v2"
 
 	"github.com/urfave/cli"
-
-	"github.com/briandowns/spinner"
 )
+
+var VERSION = "0.4.2"
 
 type Result struct {
 	CPU       *CPUStat
@@ -24,8 +22,9 @@ type Result struct {
 func main() {
 
 	app := &cli.App{
-		Name:  "nixbench",
-		Usage: "A better benchmarking tool for servers",
+		Name:    "nixbench",
+		Usage:   "A better benchmarking tool for servers",
+		Version: VERSION,
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
 				Name:  "yaml",
@@ -33,113 +32,104 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			if c.GlobalBool("yaml") {
-				runYaml()
-			} else {
-				runInteractive()
+			nixbench := Nixbench{
+				Yaml: c.GlobalBool("yaml"),
 			}
-			return nil
+
+			return nixbench.Run()
 		},
 	}
 
 	app.Run(os.Args)
 }
 
-func runInteractive() {
-	fmt.Print("nixbench 0.4.2 - https://github.com/jgillich/nixbench")
-	spin := spinner.New(spinner.CharSets[12], time.Second/10)
+type Nixbench struct {
+	Yaml bool
+}
 
-	fmt.Print("\n\n")
-	fmt.Print("Host\n")
-	fmt.Print("----\n\n")
+func (n *Nixbench) Printf(format string, a ...interface{}) {
+	if !n.Yaml {
+		fmt.Printf(format, a...)
+	}
+}
+
+func (n *Nixbench) Run() error {
+	n.Printf("nixbench - https://github.com/jgillich/nixbench")
+
+	n.Printf("\n\n")
+	n.Printf("Host\n")
+	n.Printf("----\n\n")
 	host, err := Host()
-	handleErr(err)
-	fmt.Printf("%-10s: %s\n", "OS", host.OS)
-	fmt.Printf("%-10s: %s\n", "Platform", host.Platform)
-	fmt.Printf("%-10s: %s\n", "CPU", host.CPU)
-	fmt.Printf("%-10s: %d\n", "Cores", host.Cores)
-	fmt.Printf("%-10s: %d Mhz\n", "Clock", int(host.Clock))
-	fmt.Printf("%-10s: %d MB\n", "RAM", host.RAM)
+	if err != nil {
+		return err
+	}
+	n.Printf("%-10s: %s\n", "OS", host.OS)
+	n.Printf("%-10s: %s\n", "Platform", host.Platform)
+	n.Printf("%-10s: %s\n", "CPU", host.CPU)
+	n.Printf("%-10s: %d\n", "Cores", host.Cores)
+	n.Printf("%-10s: %d Mhz\n", "Clock", int(host.Clock))
+	n.Printf("%-10s: %d MB\n", "RAM", host.RAM)
 
-	fmt.Print("\n\n")
-	fmt.Print("CPU\n")
-	fmt.Print("---\n\n")
-	spin.Start()
+	n.Printf("\n\n")
+	n.Printf("CPU\n")
+	n.Printf("---\n\n")
 	cpu, err := CPU()
-	spin.Stop()
-	handleErr(err)
-	fmt.Printf("Sha256  : %.2f seconds\n", cpu.Sha256)
-	fmt.Printf("Gzip    : %.2f seconds\n", cpu.Gzip)
+	if err != nil {
+		return err
+	}
+	n.Printf("Sha256  : %.2f seconds\n", cpu.Sha256)
+	n.Printf("Gzip    : %.2f seconds\n", cpu.Gzip)
 
-	fmt.Print("\n\n")
-	fmt.Print("Disk\n")
-	fmt.Print("----\n\n")
-	spin.Start()
+	n.Printf("\n\n")
+	n.Printf("Disk\n")
+	n.Printf("----\n\n")
 	disk, err := Disk()
-	spin.Stop()
-	handleErr(err)
+	if err != nil {
+		return err
+	}
 	for i, speed := range disk.Speeds {
-		fmt.Printf("%d. run   : %d MB/s\n", i+1, int(speed))
+		n.Printf("%d. run   : %d MB/s\n", i+1, int(speed))
 	}
-	fmt.Printf("Average  : %d MB/s\n", int(disk.Average))
+	n.Printf("Average  : %d MB/s\n", int(disk.Average))
 
-	fmt.Print("\n\n")
-	fmt.Print("Geekbench\n")
-	fmt.Print("---------\n\n")
-	spin.Start()
+	n.Printf("\n\n")
+	n.Printf("Geekbench\n")
+	n.Printf("---------\n\n")
 	gb, err := Geekbench()
-	spin.Stop()
-	handleErr(err)
-	fmt.Printf("Single-Core Score  : %d\n", gb.SingleCore)
-	fmt.Printf("Multi-Core Score   : %d\n", gb.MultiCore)
-	fmt.Printf("Result URL         : %s\n", gb.URL)
+	if err != nil {
+		return err
+	}
+	n.Printf("Single-Core Score  : %d\n", gb.SingleCore)
+	n.Printf("Multi-Core Score   : %d\n", gb.MultiCore)
+	n.Printf("Result URL         : %s\n", gb.URL)
 
-	fmt.Print("\n\n")
-	fmt.Print("Net\n")
-	fmt.Print("---\n\n")
-	spin.Start()
+	n.Printf("\n\n")
+	n.Printf("Net\n")
+	n.Printf("---\n\n")
 	net, err := Net()
-	spin.Stop()
-	handleErr(err)
+	if err != nil {
+		return err
+	}
+
 	for _, f := range files {
-		fmt.Printf("%-30s: %d MB/s\n", f.Key, int((*net)[f.Key]))
+		n.Printf("%-30s: %-6.2f MB/s\n", f.Key, (*net)[f.Key])
 	}
 
-}
+	if n.Yaml {
+		res := Result{
+			Host:      host,
+			CPU:       cpu,
+			Disk:      disk,
+			Geekbench: gb,
+			Net:       net,
+		}
 
-func runYaml() {
-	host, err := Host()
-	handleErr(err)
-
-	cpu, err := CPU()
-	handleErr(err)
-
-	disk, err := Disk()
-	handleErr(err)
-
-	gb, err := Geekbench()
-	handleErr(err)
-
-	net, err := Net()
-	handleErr(err)
-
-	res := Result{
-		Host:      host,
-		CPU:       cpu,
-		Disk:      disk,
-		Geekbench: gb,
-		Net:       net,
+		yml, err := yaml.Marshal(res)
+		if err != nil {
+			return err
+		}
+		fmt.Printf(string(yml))
 	}
 
-	yml, err := yaml.Marshal(res)
-	handleErr(err)
-
-	fmt.Printf(string(yml))
-}
-
-func handleErr(err error) {
-	if err == nil {
-		return
-	}
-	log.Fatalf("error: %v", err)
+	return nil
 }
