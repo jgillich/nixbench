@@ -1,16 +1,20 @@
-package main
+package modules
 
 import (
 	"fmt"
 
-	"code.cloudfoundry.org/bytefmt"
-
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/host"
 	"github.com/shirou/gopsutil/mem"
+
+	"code.cloudfoundry.org/bytefmt"
 )
 
-type HostStat struct {
+func init() {
+	Modules["host"] = &Host{}
+}
+
+type Host struct {
 	OS       string
 	Platform string
 	CPU      string
@@ -19,13 +23,10 @@ type HostStat struct {
 	RAM      uint64
 }
 
-// Host returns general system information
-func Host() (*HostStat, error) {
-	stat := HostStat{}
-
+func (stat *Host) Run() error {
 	host, err := host.Info()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	stat.OS = host.OS
@@ -33,7 +34,7 @@ func Host() (*HostStat, error) {
 
 	cpu, err := cpu.Info()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	stat.CPU = cpu[0].ModelName
@@ -42,10 +43,19 @@ func Host() (*HostStat, error) {
 
 	vm, err := mem.VirtualMemory()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	stat.RAM = vm.Total / bytefmt.MEGABYTE
 
-	return &stat, nil
+	return nil
+}
+
+func (stat *Host) Print() {
+	fmt.Printf("%-10s: %s\n", "OS", stat.OS)
+	fmt.Printf("%-10s: %s\n", "Platform", stat.Platform)
+	fmt.Printf("%-10s: %s\n", "CPU", stat.CPU)
+	fmt.Printf("%-10s: %d\n", "Cores", stat.Cores)
+	fmt.Printf("%-10s: %d Mhz\n", "Clock", int(stat.Clock))
+	fmt.Printf("%-10s: %d MB\n", "RAM", stat.RAM)
 }

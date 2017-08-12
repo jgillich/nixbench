@@ -1,6 +1,6 @@
 // +build linux
 
-package main
+package modules
 
 import (
 	"archive/tar"
@@ -16,16 +16,25 @@ import (
 	"strconv"
 )
 
-func Geekbench() (*GeekbenchStat, error) {
-	stat := GeekbenchStat{}
+func init() {
+	Modules["geekbench"] = &Geekbench{}
+}
 
+type Geekbench struct {
+	SingleCore int
+	MultiCore  int
+	URL        string
+	ID         int
+}
+
+func (stat *Geekbench) Run() error {
 	res, err := http.Get("http://cdn.primatelabs.com/Geekbench-4.1.0-Linux.tar.gz")
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := extract(res.Body); err != nil {
-		return nil, err
+		return err
 	}
 
 	gb := exec.Command("build.pulse/dist/Geekbench-4.1.0-Linux/geekbench4")
@@ -33,21 +42,21 @@ func Geekbench() (*GeekbenchStat, error) {
 	out, err := gb.Output()
 	if err != nil {
 		fmt.Println(string(out))
-		return nil, err
+		return err
 	}
 
 	if err := os.RemoveAll("build.pulse"); err != nil {
-		return nil, err
+		return err
 	}
 
 	r, err := regexp.Compile("https://browser.geekbench.com/v4/cpu/([0-9]*)")
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	match := r.FindStringSubmatch(string(out))
 	if len(match) < 2 {
-		return nil, errors.New("geekbench did not return result url")
+		return errors.New("geekbench did not return result url")
 	}
 
 	stat.URL = match[0]
@@ -56,10 +65,16 @@ func Geekbench() (*GeekbenchStat, error) {
 
 	stat.SingleCore, stat.MultiCore, err = scrape(stat.URL)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return &stat, nil
+	return nil
+}
+
+func (stat *Geekbench) Print() {
+	fmt.Printf("Single-Core Score  : %d\n", stat.SingleCore)
+	fmt.Printf("Multi-Core Score   : %d\n", stat.MultiCore)
+	fmt.Printf("Result URL         : %s\n", stat.URL)
 }
 
 func scrape(url string) (int, int, error) {

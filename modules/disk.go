@@ -1,4 +1,4 @@
-package main
+package modules
 
 import (
 	"fmt"
@@ -9,19 +9,20 @@ import (
 	"code.cloudfoundry.org/bytefmt"
 )
 
-// DiskStat stores disk speeds in MB/s
-type DiskStat struct {
+func init() {
+	Modules["disk"] = &Disk{}
+}
+
+type Disk struct {
 	Average float64
 	Speeds  []float64
 }
 
-func Disk() (*DiskStat, error) {
-	stat := DiskStat{}
-
+func (stat *Disk) Run() error {
 	zero, err := os.Open("/dev/zero")
 	defer zero.Close()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	speeds := []float64{}
@@ -31,13 +32,13 @@ func Disk() (*DiskStat, error) {
 
 		f, err := os.Create(name)
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		start := time.Now()
 
 		if _, err := io.CopyN(f, zero, bytefmt.GIGABYTE); err != nil {
-			return nil, err
+			return err
 		}
 		f.Sync()
 		f.Close()
@@ -56,5 +57,12 @@ func Disk() (*DiskStat, error) {
 	stat.Average = total / float64(len(speeds))
 	stat.Speeds = speeds
 
-	return &stat, nil
+	return nil
+}
+
+func (stat *Disk) Print() {
+	for i, speed := range stat.Speeds {
+		fmt.Printf("%d. run   : %d MB/s\n", i+1, int(speed))
+	}
+	fmt.Printf("Average  : %d MB/s\n", int(stat.Average))
 }

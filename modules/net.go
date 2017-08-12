@@ -1,4 +1,4 @@
-package main
+package modules
 
 import (
 	"fmt"
@@ -8,6 +8,12 @@ import (
 
 	"code.cloudfoundry.org/bytefmt"
 )
+
+func init() {
+	Modules["net"] = &Net{}
+}
+
+type Net map[string]float64
 
 type file struct {
 	Key string
@@ -34,12 +40,7 @@ var files = []file{
 	{Key: "Washington, USA", URL: "http://speedtest.wdc01.softlayer.com/downloads/test100.zip"},
 }
 
-// NetStat contains the speed test results in MB per second
-type NetStat map[string]float64
-
-func Net() (*NetStat, error) {
-	stat := NetStat{}
-
+func (stat *Net) Run() error {
 	var client = &http.Client{
 		Timeout: time.Minute * 5,
 	}
@@ -47,22 +48,28 @@ func Net() (*NetStat, error) {
 	for _, file := range files {
 		res, err := client.Get(file.URL)
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		if res.ContentLength < bytefmt.MEGABYTE*100 {
-			return nil, fmt.Errorf("unexpected content length %v at %s", res.ContentLength, file.Key)
+			return fmt.Errorf("unexpected content length %v at %s", res.ContentLength, file.Key)
 		}
 
 		start := time.Now()
 		_, err = ioutil.ReadAll(res.Body)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		duration := time.Since(start)
 
-		stat[file.Key] = float64(res.ContentLength/bytefmt.MEGABYTE) / duration.Seconds()
+		(*stat)[file.Key] = float64(res.ContentLength/bytefmt.MEGABYTE) / duration.Seconds()
 	}
 
-	return &stat, nil
+	return nil
+}
+
+func (stat *Net) Print() {
+	for _, f := range files {
+		fmt.Printf("%-30s: %-6.2f MB/s\n", f.Key, (*stat)[f.Key])
+	}
 }
