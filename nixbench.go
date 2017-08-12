@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 
 	cli "gopkg.in/urfave/cli.v2"
@@ -52,6 +53,8 @@ func main() {
 			if c.Bool("all") {
 				enabledModules = moduleNames
 			}
+
+			sort.Strings(enabledModules)
 
 			for _, name := range enabledModules {
 				module, ok := modules.Modules[name]
