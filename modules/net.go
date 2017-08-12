@@ -53,20 +53,21 @@ func (stat *Net) Run() error {
 	}
 
 	for _, file := range files {
+		(*stat)[file.Key] = 0
+
 		res, err := client.Get(file.URL)
 		if err != nil {
-			(*stat)[file.Key] = 0
 			continue
 		}
 
 		if res.ContentLength < bytefmt.MEGABYTE*100 {
-			return fmt.Errorf("unexpected content length %v at %s", res.ContentLength, file.Key)
+			continue
 		}
 
 		start := time.Now()
 		_, err = ioutil.ReadAll(res.Body)
 		if err != nil {
-			return err
+			continue
 		}
 		duration := time.Since(start)
 
