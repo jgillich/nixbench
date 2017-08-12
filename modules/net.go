@@ -30,7 +30,7 @@ var files = []file{
 	{Key: "Melbourne, Australia", URL: "http://speedtest.mel01.softlayer.com/downloads/test100.zip"},
 	{Key: "Oslo, Norway", URL: "http://speedtest.osl01.softlayer.com/downloads/test100.zip"},
 	{Key: "Paris, France", URL: "http://speedtest.par01.softlayer.com/downloads/test100.zip"},
-	{Key: "Querétaro Mexico", URL: "http://speedtest.mex01.softlayer.com/downloads/test100.zip"},
+	{Key: "Queretaro Mexico", URL: "http://speedtest.mex01.softlayer.com/downloads/test100.zip"},
 	{Key: "San Jose, USA", URL: "http://speedtest.sjc01.softlayer.com/downloads/test100.zip"},
 	{Key: "Sao Paulo, Brazil", URL: "http://speedtest.sao01.softlayer.com/downloads/test100.zip"},
 	{Key: "Seoul, Korea", URL: "http://speedtest.seo01.softlayer.com/downloads/test100.zip"},
