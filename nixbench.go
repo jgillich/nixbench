@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"reflect"
 	"strings"
 
 	cli "gopkg.in/urfave/cli.v2"
@@ -17,15 +16,24 @@ var VERSION = "master"
 
 func main() {
 
+	moduleNames := []string{}
+	for key := range modules.Modules {
+		moduleNames = append(moduleNames, key)
+	}
+
 	app := &cli.App{
 		Name:        "nixbench",
 		Usage:       "A better benchmarking tool for servers",
-		Description: fmt.Sprintf("Loaded modules: %s", strings.Trim(fmt.Sprintf("%v", reflect.ValueOf(modules.Modules).MapKeys()), "[]")),
+		Description: fmt.Sprintf("Loaded modules: %s", strings.Trim(fmt.Sprintf("%v", moduleNames), "[]")),
 		Version:     VERSION,
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
 				Name:  "yaml",
 				Usage: "Output as yaml",
+			},
+			&cli.BoolFlag{
+				Name:  "all",
+				Usage: "Run all modules",
 			},
 			&cli.StringSliceFlag{
 				Name:    "modules",
@@ -39,7 +47,13 @@ func main() {
 				fmt.Printf("nixbench %s - https://github.com/jgillich/nixbench", VERSION)
 			}
 
-			for _, name := range c.StringSlice("modules") {
+			enabledModules := c.StringSlice("modules")
+
+			if c.Bool("all") {
+				enabledModules = moduleNames
+			}
+
+			for _, name := range enabledModules {
 				module, ok := modules.Modules[name]
 
 				if !ok {
