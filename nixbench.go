@@ -9,7 +9,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-var VERSION = "0.4.2"
+var VERSION = "0.4.3"
 
 type Result struct {
 	CPU       *CPUStat
