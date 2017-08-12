@@ -1,5 +1,7 @@
 # nixbench
 
+[![Build Status](https://travis-ci.org/jgillich/nixbench.svg?branch=master)](https://travis-ci.org/jgillich/nixbench)
+
 A better benchmarking tool for servers.
 
 To invoke, run:
