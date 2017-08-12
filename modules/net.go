@@ -3,6 +3,7 @@ package modules
 import (
 	"fmt"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"time"
 
@@ -42,13 +43,20 @@ var files = []file{
 
 func (stat *Net) Run() error {
 	var client = &http.Client{
+		Transport: &http.Transport{
+			Dial: (&net.Dialer{
+				Timeout: 5 * time.Second,
+			}).Dial,
+			TLSHandshakeTimeout: 5 * time.Second,
+		},
 		Timeout: time.Minute * 5,
 	}
 
 	for _, file := range files {
 		res, err := client.Get(file.URL)
 		if err != nil {
-			return err
+			(*stat)[file.Key] = 0
+			continue
 		}
 
 		if res.ContentLength < bytefmt.MEGABYTE*100 {
@@ -70,6 +78,10 @@ func (stat *Net) Run() error {
 
 func (stat *Net) Print() {
 	for _, f := range files {
-		fmt.Printf("%-30s: %-6.2f MB/s\n", f.Key, (*stat)[f.Key])
+		if (*stat)[f.Key] == 0 {
+			fmt.Printf("%-30s: Failed\n", f.Key)
+		} else {
+			fmt.Printf("%-30s: %-6.2f MB/s\n", f.Key, (*stat)[f.Key])
+		}
 	}
 }
