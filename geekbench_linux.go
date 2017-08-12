@@ -32,6 +32,7 @@ func Geekbench() (*GeekbenchStat, error) {
 
 	out, err := gb.Output()
 	if err != nil {
+		fmt.Println(string(out))
 		return nil, err
 	}
 
