@@ -82,7 +82,7 @@ func (stat *Net) Print() {
 		if (*stat)[f.Key] == 0 {
 			fmt.Printf("%-30s: Failed\n", f.Key)
 		} else {
-			fmt.Printf("%-30s: %-6.2f MB/s\n", f.Key, (*stat)[f.Key])
+			fmt.Printf("%-30s: %6.2f MB/s\n", f.Key, (*stat)[f.Key])
 		}
 	}
 }
