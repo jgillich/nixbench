@@ -43,7 +43,7 @@ func (stat *CPU) Run() error {
 		return err
 	}
 	hash.Sum(nil)
-	stat.Sha256 = time.Since(hashStart).Seconds()
+	stat.Sha256 = (bytefmt.GIGABYTE / time.Since(hashStart).Seconds()) / bytefmt.MEGABYTE
 
 	gzipStart := time.Now()
 	gz := gzip.NewWriter(null)
@@ -51,7 +51,7 @@ func (stat *CPU) Run() error {
 		return err
 	}
 	gz.Close()
-	stat.Gzip = time.Since(gzipStart).Seconds()
+	stat.Gzip = (bytefmt.GIGABYTE / time.Since(gzipStart).Seconds()) / bytefmt.MEGABYTE
 
 	stat.aes()
 
@@ -59,12 +59,12 @@ func (stat *CPU) Run() error {
 }
 
 func (stat *CPU) Print() {
-	fmt.Printf("Sha256  : %.2f seconds\n", stat.Sha256)
-	fmt.Printf("Gzip    : %.2f seconds\n", stat.Gzip)
-	fmt.Printf("AES     : %.2f seconds\n", stat.Aes)
+	fmt.Printf("Sha256  : %7.2f MB/s\n", stat.Sha256)
+	fmt.Printf("Gzip    : %7.2f MB/s\n", stat.Gzip)
+	fmt.Printf("AES     : %7.2f MB/s\n", stat.Aes)
 }
 
-// aes encrypts 100MB of random data using AES-256-GCM
+// aes encrypts 5GB of random data using AES-256-GCM
 // crypto sourced from https://github.com/gtank/cryptopasta
 func (stat *CPU) aes() error {
 
@@ -98,7 +98,7 @@ func (stat *CPU) aes() error {
 
 		gcm.Seal(nonce, nonce, data[:], nil)
 	}
-	stat.Aes = time.Since(aesStart).Seconds()
+	stat.Aes = (bytefmt.GIGABYTE * 5 / time.Since(aesStart).Seconds()) / bytefmt.MEGABYTE
 
 	return nil
 }
