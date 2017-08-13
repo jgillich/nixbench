@@ -79,7 +79,7 @@ func (stat *CPU) aes() error {
 	}
 
 	aesStart := time.Now()
-	for i := 0; i < bytefmt.GIGABYTE*5; i += bytefmt.MEGABYTE {
+	for i := 0; i < 1024*5; i++ {
 
 		block, err := aes.NewCipher(key[:])
 		if err != nil {
