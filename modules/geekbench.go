@@ -33,7 +33,7 @@ func (stat *Geekbench) Run() error {
 		return err
 	}
 
-	if err := extract(res.Body); err != nil {
+	if err := stat.extract(res.Body); err != nil {
 		return err
 	}
 
@@ -63,7 +63,7 @@ func (stat *Geekbench) Run() error {
 	id, _ := strconv.Atoi(match[1])
 	stat.ID = id
 
-	stat.SingleCore, stat.MultiCore, err = scrape(stat.URL)
+	stat.SingleCore, stat.MultiCore, err = stat.scrape(stat.URL)
 	if err != nil {
 		return err
 	}
@@ -77,7 +77,7 @@ func (stat *Geekbench) Print() {
 	fmt.Printf("Result URL         : %s\n", stat.URL)
 }
 
-func scrape(url string) (int, int, error) {
+func (stat *Geekbench) scrape(url string) (int, int, error) {
 	res, err := http.Get(url)
 	if err != nil {
 		return 0, 0, err
@@ -114,7 +114,7 @@ func scrape(url string) (int, int, error) {
 	return singleScore, multiScore, nil
 }
 
-func extract(r io.Reader) error {
+func (stat *Geekbench) extract(r io.Reader) error {
 
 	gzf, err := gzip.NewReader(r)
 	if err != nil {
