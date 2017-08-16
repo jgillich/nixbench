@@ -37,7 +37,7 @@ func main() {
 				Usage: "Run all modules",
 			},
 			&cli.StringSliceFlag{
-				Name:    "modules",
+				Name:    "module",
 				Aliases: []string{"m"},
 				Usage:   "Modules to enable",
 				Value:   cli.NewStringSlice("host", "cpu", "disk", "net", "geekbench"),
