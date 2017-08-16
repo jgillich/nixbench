@@ -40,7 +40,7 @@ func main() {
 				Name:    "modules",
 				Aliases: []string{"m"},
 				Usage:   "Modules to enable",
-				Value:   cli.NewStringSlice("host", "cpu", "disk", "net"),
+				Value:   cli.NewStringSlice("host", "cpu", "disk", "net", "geekbench"),
 			},
 		},
 		Action: func(c *cli.Context) error {
