@@ -20,10 +20,6 @@ env:
   - OS=windows ARCH=amd64
 matrix:
   allow_failures:
-    - env: OS=freebsd ARCH=arm
-    - env: OS=openbsd ARCH=386
-    - env: OS=openbsd ARCH=amd64
-    - env: OS=openbsd ARCH=arm
     - env: OS=windows ARCH=386
     - env: OS=windows ARCH=amd64
 install:
