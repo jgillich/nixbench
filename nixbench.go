@@ -48,7 +48,7 @@ func main() {
 				fmt.Printf("nixbench %s - https://github.com/jgillich/nixbench", VERSION)
 			}
 
-			enabledModules := c.StringSlice("modules")
+			enabledModules := c.StringSlice("module")
 
 			if c.Bool("all") {
 				enabledModules = moduleNames
