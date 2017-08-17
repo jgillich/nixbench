@@ -41,7 +41,7 @@ func (stat *Geekbench) Run() error {
 
 	out, err := gb.Output()
 	if err != nil {
-		fmt.Println(string(out))
+		fmt.Print(err.(*exec.ExitError).Stderr)
 		return err
 	}
 
