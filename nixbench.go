@@ -45,7 +45,7 @@ func main() {
 		},
 		Action: func(c *cli.Context) error {
 			if !c.Bool("yaml") {
-				fmt.Printf("nixbench %s - https://github.com/jgillich/nixbench", VERSION)
+				fmt.Printf("nixbench %s - https://github.com/jgillich/nixbench\n", VERSION)
 			}
 
 			enabledModules := c.StringSlice("module")
@@ -76,12 +76,13 @@ func main() {
 					}
 					fmt.Printf(string(yml))
 				} else {
-					fmt.Printf("\n\n%s\n", name)
+					fmt.Printf("\n%s\n", name)
 					for i := 1; i <= len(name); i++ {
 						fmt.Print("-")
 					}
 					fmt.Print("\n")
 					module.Print()
+					fmt.Print("\n")
 				}
 			}
 
