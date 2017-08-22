@@ -41,7 +41,11 @@ func (stat *Geekbench) Run() error {
 
 	out, err := gb.Output()
 	if err != nil {
-		fmt.Printf("%s", err.(*exec.ExitError).Stderr)
+		exit, ok := err.(*exec.ExitError)
+		if ok {
+			fmt.Printf("%s", exit.Stderr)
+		}
+
 		return err
 	}
 
