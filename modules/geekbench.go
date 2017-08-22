@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
+	"runtime"
 	"strconv"
 )
 
@@ -37,7 +38,15 @@ func (stat *Geekbench) Run() error {
 		return err
 	}
 
-	gb := exec.Command("build.pulse/dist/Geekbench-4.1.0-Linux/geekbench4")
+	cmd := "build.pulse/dist/Geekbench-4.1.0-Linux/geekbench_x86_"
+
+	if runtime.GOARCH == "386" {
+		cmd = fmt.Sprintf("%s%s", cmd, "32")
+	} else {
+		cmd = fmt.Sprintf("%s%s", cmd, "64")
+	}
+
+	gb := exec.Command(cmd)
 
 	out, err := gb.Output()
 	if err != nil {
