@@ -21,8 +21,8 @@ import (
 )
 
 var (
-	vm, err = mem.VirtualMemory()
-	ram     = vm.Total / bytefmt.MEGABYTE
+	vm, _ = mem.VirtualMemory()
+	ram   = vm.Total / bytefmt.MEGABYTE
 )
 
 func init() {
