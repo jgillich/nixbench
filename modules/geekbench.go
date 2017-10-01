@@ -7,6 +7,7 @@ import (
 	"compress/gzip"
 	"errors"
 	"fmt"
+	"github.com/shirou/gopsutil/mem"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -15,6 +16,13 @@ import (
 	"regexp"
 	"runtime"
 	"strconv"
+
+	"code.cloudfoundry.org/bytefmt"
+)
+
+var (
+	vm, err = mem.VirtualMemory()
+	ram     = vm.Total / bytefmt.MEGABYTE
 )
 
 func init() {
@@ -29,6 +37,9 @@ type Geekbench struct {
 }
 
 func (stat *Geekbench) Run() error {
+	if ram < 2000 {
+		return nil
+	}
 	res, err := http.Get("http://cdn.primatelabs.com/Geekbench-4.1.0-Linux.tar.gz")
 	if err != nil {
 		return err
@@ -85,9 +96,13 @@ func (stat *Geekbench) Run() error {
 }
 
 func (stat *Geekbench) Print() {
-	fmt.Printf("Single-Core Score  : %d\n", stat.SingleCore)
-	fmt.Printf("Multi-Core Score   : %d\n", stat.MultiCore)
-	fmt.Printf("Result URL         : %s\n", stat.URL)
+	if ram < 2000 {
+		fmt.Println("Geekbench was skipped as the system has less than 2GB memory.")
+	} else {
+		fmt.Printf("Single-Core Score  : %d\n", stat.SingleCore)
+		fmt.Printf("Multi-Core Score   : %d\n", stat.MultiCore)
+		fmt.Printf("Result URL         : %s\n", stat.URL)
+	}
 }
 
 func (stat *Geekbench) scrape(url string) (int, int, error) {
